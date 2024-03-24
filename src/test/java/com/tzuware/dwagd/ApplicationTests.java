@@ -8,15 +8,16 @@ package com.tzuware.dwagd;
 
 import java.util.AbstractMap;
 import java.util.Map;
-import org.junit.jupiter.api.Assertions;
+import java.util.Objects;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@AutoConfigureWebTestClient
 class ApplicationTests {
 	private static final Map<String, String> VALID_DATES = Map.ofEntries(
 			new AbstractMap.SimpleEntry<>("1804-12-23", "Sunday"),
@@ -28,19 +29,29 @@ class ApplicationTests {
 			new AbstractMap.SimpleEntry<>("1992-06-20", "Saturday")
 	);
 
-	@LocalServerPort
-	private int port;
-
-	@Autowired
-	private TestRestTemplate restTemplate;
-
 	@Test
 	void contextLoads() {
 	}
 
 	@Test
-	void testValidDates() {
-		VALID_DATES.forEach((k, v) -> Assertions.assertEquals(v, restTemplate
-        .getForObject(("http://localhost:" + port + "/dayofweek/" + k), String.class)));
+	void testValidDates(@Autowired WebTestClient client) {
+		VALID_DATES.forEach((k, v) -> {
+			assert Objects.requireNonNull(client.get()
+              .uri("dayofweek/" + k)
+              .exchange()
+              .expectStatus().isOk()
+              .expectBody(String.class)
+              .returnResult()
+              .getResponseBody())
+					.equals(v);
+		});
+	}
+
+	@Test
+	void testBadDate(@Autowired WebTestClient client) {
+		client.get()
+				.uri("dayofweek/1752-12-31")
+				.exchange()
+				.expectStatus().isBadRequest();
 	}
 }
