@@ -91,7 +91,7 @@ public class Application {
   }
 
   @GetMapping("/{date}")
-  ResponseEntity getDayOfWeek(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+  ResponseEntity<String> getDayOfWeek(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
     try {
       return ResponseEntity.ok(calculateDayOfWeek(date));
     } catch (Exception e) {
