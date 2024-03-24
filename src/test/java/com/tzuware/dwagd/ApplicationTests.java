@@ -18,12 +18,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class ApplicationTests {
-	@LocalServerPort
-	private int port;
-
-	@Autowired
-	private TestRestTemplate restTemplate;
-
 	private static final Map<String, String> VALID_DATES = Map.ofEntries(
 			new AbstractMap.SimpleEntry<>("1804-12-23", "Sunday"),
 			new AbstractMap.SimpleEntry<>("1753-01-01", "Monday"),
@@ -33,6 +27,12 @@ class ApplicationTests {
 			new AbstractMap.SimpleEntry<>("1949-10-21", "Friday"),
 			new AbstractMap.SimpleEntry<>("1992-06-20", "Saturday")
 	);
+
+	@LocalServerPort
+	private int port;
+
+	@Autowired
+	private TestRestTemplate restTemplate;
 
 	@Test
 	void contextLoads() {
