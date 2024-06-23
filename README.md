@@ -2,7 +2,7 @@
 
 Java Spring Boot implementation of [Day Of The Week For Any Given Date](https://github.com/ebenne01/dwagd). This version of dwagd is implemented as a web service with the following endpoints:
 
-- API/V1/DAYOFWEEK/:DATE
+- /api/v1/dayofweek/{date}
 
   Returns the day of the week for the specified date. The date must be in ISO-8601 format (yyyy-mm-dd)
 
