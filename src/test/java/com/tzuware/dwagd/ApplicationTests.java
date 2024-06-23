@@ -6,6 +6,8 @@
 
 package com.tzuware.dwagd;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Objects;
@@ -36,21 +38,21 @@ class ApplicationTests {
 	@Test
 	void testValidDates(@Autowired WebTestClient client) {
 		VALID_DATES.forEach((k, v) -> {
-			assert Objects.requireNonNull(client.get()
-              .uri("dayofweek/" + k)
+      assertEquals(v,
+					Objects.requireNonNull(client.get()
+							.uri("/api/v1/dayofweek/" + k)
               .exchange()
               .expectStatus().isOk()
               .expectBody(String.class)
               .returnResult()
-              .getResponseBody())
-					.equals(v);
+              .getResponseBody()));
 		});
 	}
 
 	@Test
 	void testBadDate(@Autowired WebTestClient client) {
 		client.get()
-				.uri("dayofweek/1752-12-31")
+				.uri("/api/v1/dayofweek/1752-12-31")
 				.exchange()
 				.expectStatus().isBadRequest();
 	}

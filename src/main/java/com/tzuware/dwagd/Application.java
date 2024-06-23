@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-@RequestMapping("/dayofweek")
+@RequestMapping("/api/v1/dayofweek")
 public class Application {
 
   private static final Map<Integer, DayOfWeek> DAYS_OF_WEEK = Map.ofEntries(
@@ -52,17 +52,17 @@ public class Application {
   );
 
   private static String calculateDayOfWeek(LocalDate date) throws Exception {
-    int yearVal = date.getYear();
-    int twoDigitYear = yearVal % 100;
-    int monthVal = date.getMonthValue();
-    int dayVal = date.getDayOfMonth();
-    Month month = MONTHS.get(monthVal);
+    var yearVal = date.getYear();
+    var twoDigitYear = yearVal % 100;
+    var monthVal = date.getMonthValue();
+    var dayVal = date.getDayOfMonth();
+    var month = MONTHS.get(monthVal);
 
     if (yearVal < 1753) {
       throw new Exception("Year must be greater than 1752");
     }
 
-    int sum = 0;
+    var sum = 0;
 
     sum += twoDigitYear;
     sum += twoDigitYear / 4;
@@ -81,7 +81,7 @@ public class Application {
       sum -= 1;
     }
 
-    int dayNum = sum % 7;
+    var dayNum = sum % 7;
 
     return DAYS_OF_WEEK.get(dayNum).getDisplayName(TextStyle.FULL, Locale.getDefault());
   }
